@@ -3,7 +3,7 @@ import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import Fab from '@material-ui/core/Fab';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
-// import storageRef from '../../firebase';
+import firebase from '../../firebase';
 
 export default function Uploader() {
   const [imgPreview, setImg] = useState(undefined);
@@ -20,6 +20,11 @@ export default function Uploader() {
         const { result } = r.target;
         setImg(result);
       };
+      const storage = firebase.storage().ref();
+      const fileRef = storage.child(name);
+      fileRef.put(file).then(() => {
+        console.log('Uploaded file ', name);
+      });
     } else {
       setOpen(true);
     }
