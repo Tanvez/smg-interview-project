@@ -5,6 +5,7 @@ import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import shortid from 'shortid';
 import { useRouter } from 'next/router';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import firebase from '../../firebase';
 
 const db = firebase.firestore();
@@ -25,6 +26,7 @@ export default function Uploader() {
   const [open, setOpen] = useState(false);
   const [errorMsg, setMsg] = useState(undefined);
   const [id, setId] = useState(undefined);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleUploadClick = async event => {
@@ -41,19 +43,15 @@ export default function Uploader() {
     }
     // checks file size
     if (mbSize <= 10) {
+      setLoading(true);
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onloadend = r => {
-        const { result } = r.target;
-        setImg(result);
-      };
       const storage = firebase.storage().ref();
       const fileRef = storage.child(name);
       await fileRef.put(file);
       const firebaseUrl = await fileRef.getDownloadURL();
       const smolUrlId = shortid.generate();
       setId(smolUrlId);
-
       // Updates database with the media type and generates a small url id
       await db
         .collection('media')
@@ -64,6 +62,7 @@ export default function Uploader() {
           url: firebaseUrl,
           smol_url_id: smolUrlId,
         });
+      setLoading(false);
       // redirects to media
       router.push(`/${smolUrlId}`);
     } else {
@@ -80,26 +79,35 @@ export default function Uploader() {
   };
 
   useEffect(() => {
-    // Prefetch the dashboard page
+    // Prefetch the media page
     router.prefetch(`/${id}`);
   }, [id, router]);
 
   return (
     <>
-      <input
-        accept=""
-        style={{ display: 'none' }}
-        id="contained-button-file"
-        multiple
-        type="file"
-        onChange={handleUploadClick}
-      />
-      <label htmlFor="contained-button-file">
-        <Fab component="span">
-          <AddPhotoAlternateIcon />
-        </Fab>
-      </label>
-      {/* <img src={imgPreview || ''} height="200" alt="" /> */}
+      {!loading && (
+        <input
+          accept=""
+          style={{ display: 'none' }}
+          id="contained-button-file"
+          multiple
+          type="file"
+          onChange={handleUploadClick}
+        />
+      )}
+      {!loading && (
+        <label htmlFor="contained-button-file">
+          <Fab component="span">
+            <AddPhotoAlternateIcon />
+          </Fab>
+        </label>
+      )}
+      {!loading && (
+        <div style={{ paddingTop: '10px' }}>
+          Upload your Documents here(10MB Limit)
+        </div>
+      )}
+      {loading && <CircularProgress disableShrink size="4rem" />}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           {errorMsg}
