@@ -4,6 +4,7 @@ import Fab from '@material-ui/core/Fab';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import shortid from 'shortid';
+import { useRouter } from 'next/router';
 import firebase from '../../firebase';
 
 const db = firebase.firestore();
@@ -23,6 +24,8 @@ export default function Uploader() {
   const [imgPreview, setImg] = useState(undefined);
   const [open, setOpen] = useState(false);
   const [errorMsg, setMsg] = useState(undefined);
+  const [id, setId] = useState(undefined);
+  const router = useRouter();
 
   const handleUploadClick = async event => {
     event.preventDefault();
@@ -48,17 +51,21 @@ export default function Uploader() {
       const fileRef = storage.child(name);
       await fileRef.put(file);
       const firebaseUrl = await fileRef.getDownloadURL();
-      const smolUrl = shortid.generate();
+      const smolUrlId = shortid.generate();
+      setId(smolUrlId);
 
       // Updates database with the media type and generates a small url id
-      db.collection('media')
-        .doc(name)
+      await db
+        .collection('media')
+        .doc(smolUrlId)
         .set({
           title: name,
           type,
           url: firebaseUrl,
-          smol_url_id: smolUrl,
+          smol_url_id: smolUrlId,
         });
+      // redirects to media
+      router.push(`/${smolUrlId}`);
     } else {
       setMsg('Oh No! File is bigger than 10 MB');
       setOpen(true);
@@ -69,9 +76,13 @@ export default function Uploader() {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
+
+  useEffect(() => {
+    // Prefetch the dashboard page
+    router.prefetch(`/${id}`);
+  }, [id, router]);
 
   return (
     <>
