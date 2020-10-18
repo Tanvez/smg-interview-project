@@ -2,7 +2,7 @@ import firebase from '../../../firebase';
 
 export default (req, res) => {
   firebase
-    .collection('images')
+    .collection('media')
     .doc(req.query.name)
     .get()
     .then(doc => {
