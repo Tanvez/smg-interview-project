@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Uploader from '../components/uploader';
+// import smolurl from '../public/smolurl.png';
 
 export default function Home() {
   return (
@@ -20,8 +21,13 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by {'VT'}
-          <img src="" alt="" className={styles.logo} />
+          Powered by
+          <img
+            className={styles.footerLogo}
+            src="/smolurl.png"
+            alt="smol url"
+          />
+          {/* <img src="" alt="" className={styles.logo} /> */}
         </a>
       </footer>
     </div>
