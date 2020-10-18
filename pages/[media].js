@@ -12,7 +12,12 @@ export default function Media({ id }) {
     };
     response();
   }, [id, router]);
-  return <div>image should be here</div>;
+  if (!data) return <div>Loading..</div>;
+  return (
+    <div>
+      <iframe title={data.title} src={data.url} width="100%" height="500" />
+    </div>
+  );
 }
 // router.query.media is undefined on initial page load and cause errors
 // get query params before the page loads - its a nextjs thing

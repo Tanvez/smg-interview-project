@@ -99,7 +99,7 @@ export default function Uploader() {
           <AddPhotoAlternateIcon />
         </Fab>
       </label>
-      <img src={imgPreview || ''} height="200" alt="" />
+      {/* <img src={imgPreview || ''} height="200" alt="" /> */}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">
           {errorMsg}
