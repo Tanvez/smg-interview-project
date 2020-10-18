@@ -1,6 +1,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { NextSeo } from 'next-seo';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import getMedia from './api/media';
+import Layout from '../components/layout';
 
 export default function Media({ id }) {
   const [data, setData] = useState(undefined);
@@ -12,11 +15,25 @@ export default function Media({ id }) {
     };
     response();
   }, [id, router]);
-  if (!data) return <div>Loading..</div>;
+  if (!data)
+    return (
+      <Layout>
+        <CircularProgress disableShrink size="4rem" />
+      </Layout>
+    );
+
   return (
-    <div>
-      <iframe title={data.title} src={data.url} width="100%" height="500" />
-    </div>
+    <Layout>
+      <NextSeo
+        openGraph={{
+          type: data.type,
+          url: window.location.href,
+          title: data.name,
+          description: data.name,
+        }}
+      />
+      <iframe title={data.title} src={data.url} width="500px" height="500px" />
+    </Layout>
   );
 }
 // router.query.media is undefined on initial page load and cause errors

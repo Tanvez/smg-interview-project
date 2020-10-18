@@ -33,6 +33,7 @@ export default function Uploader() {
     event.preventDefault();
     const file = event.target.files[0];
     const { size, name, type } = event.target.files[0];
+    console.log(event.target.files);
     const mbSize = size / 1024 / 1024;
     const formatedType = type.split('/')[1];
     // Checks file type
@@ -62,9 +63,9 @@ export default function Uploader() {
           url: firebaseUrl,
           smol_url_id: smolUrlId,
         });
-      setLoading(false);
       // redirects to media
       router.push(`/${smolUrlId}`);
+      setLoading(false);
     } else {
       setMsg('Oh No! File is bigger than 10 MB');
       setOpen(true);

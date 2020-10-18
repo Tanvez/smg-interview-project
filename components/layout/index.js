@@ -1,19 +1,10 @@
-import Head from 'next/head';
 import Link from 'next/link';
-import styles from '../styles/Home.module.css';
-import Uploader from '../components/uploader';
+import styles from '../../styles/Home.module.css';
 
-export default function Home() {
+export default function Layout({ children }) {
   return (
     <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <Uploader />
-      </main>
+      <main className={styles.main}>{children}</main>
 
       <footer className={styles.footer}>
         <Link href="/">
