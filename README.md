@@ -1,5 +1,15 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Notes
+
+I built this app using NextJS because it had SEO/Open Graph Protocol capabilities through an NPM packages called next-seo. In addition I used material ui for the styling and upload button.
+
+For fast implementation I used a Firebase database because unlike sql databases I could get it up and running without schemas/models.
+
+## Road Blocks
+
+I had some road blocks when query params in NextJS because the component would load before the params were ever identified. To get around this another function had to be called(specific to NextJS) so that the context params could be added to props before the component load.
+
 ## Getting Started
 
 First, run the development server:
@@ -9,6 +19,8 @@ npm run dev
 # or
 yarn dev
 ```
+
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
